@@ -207,7 +207,8 @@ export const updateAuthenticatedUsers = () => (req: Request, res: Response, next
 }
 
 export const isAdmin = () => (req: Request, res: Response, next: NextFunction) => {
-  if (req.user && req.user.data.role === 'admin') {
+  const decodedToken = verify(utils.jwtFrom(req)) && decode(utils.jwtFrom(req))
+  if (decodedToken?.data?.role === roles.admin) {
     next()
   } else {
     res.status(403).json({ error: 'Forbidden. Only admins are allowed to access this resource.' })
